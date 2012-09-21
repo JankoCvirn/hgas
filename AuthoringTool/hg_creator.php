@@ -46,7 +46,7 @@ if (!session_is_registered($username)) {
 
 <!--Map Libs -->
 <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-	
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>	
 <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
 <!--  -->
 
@@ -96,7 +96,11 @@ function init_map() {
 		projection: new OpenLayers.Projection("EPSG:4326")
 	});*/
 	//map.addLayer(lgpx);
-
+	var google_hybrid_layer = new OpenLayers.Layer.Google(
+			"Google Hybrid",
+			{type: google.maps.MapTypeId.HYBRID}
+			);
+	map.addLayer(google_hybrid_layer);
 	///////////////////////////////////////////////////////
 	var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
 	map.setCenter(lonLat, zoom);
@@ -105,6 +109,10 @@ function init_map() {
 	var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 	var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
 	layerMarkers.addMarker(new OpenLayers.Marker(lonLat,icon));
+
+	
+	
+	
 }
 
 	//////////////////////////////////
@@ -123,7 +131,7 @@ function init_map() {
 		      }
 	      else{
 	         document.getElementById('result').innerHTML =
-	           '<span class="msg">'+success+' - The file was uploaded successfully!<\/span><br/><br/>';
+	           '<span class="msg">'+success+' - The .gpx file was uploaded successfully!<\/span><br/><br/>';
 
 	        // Add the Layer with the GPX Track
 	       	var lgpx = new OpenLayers.Layer.Vector("Imported track ", {
@@ -171,6 +179,37 @@ function init_map() {
 
             highlightCtrl.activate();
             selectCtrl.activate();
+
+			//////////////////////////////////////////////
+			//Insert event
+            map.layers[4].onFeatureInsert = function(feature){
+    			
+                point_to_transform=feature.geometry;
+			
+			///where to insert wkt
+			document.forms[1].wkt.value=point_to_transform.transform(proj_900913,proj_4326);
+			
+			
+		  
+			};
+
+            
+			////////////////////////////////////////////////////////
+        	//Controls
+        	var select_feature_control = new OpenLayers.Control.
+        	SelectFeature(
+        	lgpx,
+        	{
+        	multiple: false,
+        	toggle: true,
+        	multipleKey: 'shiftKey'
+        	}
+        	);
+
+        	map.addControl(select_feature_control);
+
+        	select_feature_control.activate();
+                    
 
 
 	       	//map.addControl(new OpenLayers.Control.EditingToolbar(lgpx));
@@ -232,6 +271,14 @@ function init_map() {
 					<label for="subname" style="color: blue;"> Track Sub Name: </label> 
 					<input id="subname" value="" type="text" name="subname" /> 
 					
+					<label for="summary" style="color: blue;"> Summary: </label> 
+					
+					<textarea id="summary" value="" type="text" cols="200" rows="5" name="summary" > 
+					</textarea>
+					
+					<textarea id="navigation" value="" type="text" cols="200" rows="5" name="navigation" > 
+					</textarea>
+					
 					<label for="mapname" style="color: blue;"> Map Name: </label> 
 					<input id="mapname" value="" type="text" name="mapname" /> 
 					
@@ -239,13 +286,10 @@ function init_map() {
 					<input id="trackname" value="" type="text" name="trackname" /> 
 					
 					
-					<label for="summary" style="color: blue;"> Summary: </label> 
 					
-					<textarea id="summary" value="" type="text" cols="100" rows="5" name="summary" > 
-					</textarea>
 					
-					<label for="geom" style="color: blue;"> Geometry: </label> 
-					<input id="geom" value="" type="text" name="geom" /> 
+					<label for="wkt" style="color: blue;"> Geometry WKT: </label> 
+					<input id="wkt" value="" type="text" name="wkt" /> 
 					
 					<label for="active" style="color: blue;"> Active: </label> 
 					<input id="active" value="" type="text" name="active" /> 
@@ -254,7 +298,7 @@ function init_map() {
 					
 					
 					<button type="submit" class="btn btn-success" value="Submit"
-						name="SubmitChange">Create</button>
+						name="SubmitChange">Go To Step 2</button>
 					
 				</form>
 			
