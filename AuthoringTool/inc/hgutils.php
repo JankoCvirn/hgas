@@ -59,16 +59,16 @@ class hgutils
 	$mapName=$_POST[''];
 	$trackName=$_POST[''];*/
 	
-	public function setGuideData($name,$subName,$wkt,$summary,$description,$mapName,$trackName){
+	public function setGuideData($name,$subName,$wkt,$summary,$navigation,$mapName,$trackName){
 		
 		$creation_time=time();
 		$this->oSql=new Sql($this->db_guide);
 		$this->oSql->setErrorhandling(true, true);
-		$this->sSql="INSERT INTO '".$this->tbl_guide."' (name,sub_name,summary,map_name,
-		                                                 track_name,description,
+		$this->sSql="INSERT  INTO '".$this->tbl_guide."' (name,sub_name,summary,map_name,
+		                                                 track_name,navigation,
 		                                                 wkt,created,uid)
 					 VALUES('".$name."','".$subName."','".$summary."','".$mapName."',
-		                    '".$trackName."','".$description."',
+		                    '".$trackName."','".$navigation."',
 							'".$wkt."','".$creation_time."','".$this->uid."'
 							) ";
 		

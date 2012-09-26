@@ -23,18 +23,18 @@ if (!session_is_registered($username)) {
 	header("Location:../index.php");
 }
 
-if (isset($_POST['formNewGuide'])){
+if (isset($_POST['SubmitChange'])){
 	
-	$name=$_POST[''];
-	$subName=$_POST[''];
-	$wkt=$_POST[''];
-	$summary=$_POST[''];
-	$description=$_POST[''];
-	$mapName=$_POST[''];
-	$trackName=$_POST[''];
+	$name=$_POST['name'];
+	$subName=$_POST['subname'];
+	$wkt=$_POST['wkt'];
+	$summary=$_POST['summary'];
+	$navigation=$_POST['navigation'];
+	$mapName=$_POST['mapname'];
+	$trackName=$_POST['trackname'];
 	
-	$oHgUtil=new hgutils($username);
-	$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $description, $mapName, $trackName);
+	//$oHgUtil=new hgutils($username);
+	//$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $navigation, $mapName, $trackName);
 	
 	
 }
@@ -68,11 +68,17 @@ if (isset($_POST['formNewGuide'])){
 <script type="text/javascript">
 
 
-var lat=47.496792
-var lon=7.571726
-var zoom=13
+var lat=47.496792;
+var lon=7.571726;
+var zoom=13;
 
 var map; 
+var vector;
+var wkt='<?php echo $wkt;?>';
+var drawControls;
+var trackName='test v1';
+var pointLayer;
+var pointControl;
 
 function init_map() {
 	map = new OpenLayers.Map ("map_canvas", {
@@ -89,150 +95,59 @@ function init_map() {
 		displayProjection: new OpenLayers.Projection("EPSG:4326")
 	} );
 
-	document.getElementById('f1_upload_process').style.visibility = 'hidden';
-	
+	//Layer to hold the info-nav objects
+	pointLayer = new OpenLayers.Layer.Vector("Guide objects Layer");
+	map.addLayer(pointLayer);
+	//
 	layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 	map.addLayer(layerMapnik);
-	layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
-	map.addLayer(layerCycleMap);
-	layerMarkers = new OpenLayers.Layer.Markers("Markers");
-	map.addLayer(layerMarkers);
+	//layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
+	//map.addLayer(layerCycleMap);
+	//layerMarkers = new OpenLayers.Layer.Markers("Markers");
+	//map.addLayer(layerMarkers);
 
-	// Add the Layer with the GPX Track
-	/*var lgpx = new OpenLayers.Layer.Vector("Lakeside cycle ride", {
-		strategies: [new OpenLayers.Strategy.Fixed()],
-		protocol: new OpenLayers.Protocol.HTTP({
-			url: "around_lake.gpx",
-			format: new OpenLayers.Format.GPX()
-		}),
-		style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
-		projection: new OpenLayers.Projection("EPSG:4326")
-	});*/
-	//map.addLayer(lgpx);
 	var google_hybrid_layer = new OpenLayers.Layer.Google(
 			"Google Hybrid",
 			{type: google.maps.MapTypeId.HYBRID}
 			);
 	map.addLayer(google_hybrid_layer);
-	///////////////////////////////////////////////////////
-	var lonLat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-	map.setCenter(lonLat, zoom);
 
-	var size = new OpenLayers.Size(21, 25);
-	var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-	var icon = new OpenLayers.Icon('../marker/map_start.png',size,offset);
-	layerMarkers.addMarker(new OpenLayers.Marker(lonLat,icon));
+	//////////////////////////////////////////////////
+	//Add the wkt to vector
+	vector= new OpenLayers.Layer.Vector(trackName,{style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
+   		projection: new OpenLayers.Projection("EPSG:4326")});
+	var track_geom = new OpenLayers.Geometry.fromWKT(<?php echo wkt;?>, { strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5 }); 
+	
+	var trackFeature = new OpenLayers.Feature.Vector(track_geom,null, {}); 
+	vector.addFeatures([trackFeature]);
+	
+	map.addLayer(vector);
+
+	var dataExtent=	vector.getDataExtent();
+	map.zoomToExtent(dataExtent);
 
 	
+	 
 	
 	
+
 }
+	function setObjectDraw(){
 
-	//////////////////////////////////
-	///Ajax upload functions
-	function startUpload(){
-		document.getElementById('upload_form').style.visibility = 'hidden';
-	    document.getElementById('f1_upload_process').style.visibility = 'visible';
-	    return true;
-	}
+		pointControl=new OpenLayers.Control.DrawFeature(pointLayer,
+	            OpenLayers.Handler.Point);
+		map.addControl(pointControl);
+		pointControl.activate();   
+		}
 
-	function stopUpload(success){
-	      var result = '';
-	      if (success==0) {
-		         document.getElementById('result').innerHTML = 
-		           '<span class="emsg">There was an error during file upload!<\/span><br/><br/>';
-		      }
-	      else{
-	         document.getElementById('result').innerHTML =
-	           '<span class="msg">'+success+' - The .gpx file was uploaded successfully!<\/span><br/><br/>';
+	function setObjectStopDraw(){
+		pointControl.deactivate();
+		}
 
-	        // Add the Layer with the GPX Track
-	       	var lgpx = new OpenLayers.Layer.Vector("Imported track ", {
-	       		strategies: [new OpenLayers.Strategy.Fixed()],
-	       		protocol: new OpenLayers.Protocol.HTTP({
-	       			url: '../upload/'+success,
-	       			format: new OpenLayers.Format.GPX()
-	       		}),
-	       		style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
-	       		projection: new OpenLayers.Projection("EPSG:4326")
-	       	});
-	       	map.addLayer(lgpx);
-	       	lgpx.events.register("loadend", lgpx, function() { 
-	       		var size = new OpenLayers.Size(21,25);
-	            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-	       		var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
-		       	this.map.zoomToExtent(this.getDataExtent());
-		       	var startPoint = this.features[0].geometry.components[0];
-		        layerMarkers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(startPoint.x, startPoint.y),icon));
-
-
-		       	 } );
-
-	       	var report = function(e) {
-                OpenLayers.Console.log(e.type, e.feature.id);
-            };
-
-	       	var highlightCtrl = new OpenLayers.Control.SelectFeature(lgpx, {
-                hover: true,
-                highlightOnly: true,
-                renderIntent: "temporary",
-                eventListeners: {
-                    beforefeaturehighlighted: report,
-                    featurehighlighted: report,
-                    featureunhighlighted: report
-                }
-            });
-
-            var selectCtrl = new OpenLayers.Control.SelectFeature(lgpx,
-                {clickout: true}
-            );
-
-            map.addControl(highlightCtrl);
-            map.addControl(selectCtrl);
-
-            highlightCtrl.activate();
-            selectCtrl.activate();
-
-			//////////////////////////////////////////////
-			//Insert event
-            map.layers[4].onFeatureInsert = function(feature){
-    			
-              //  point_to_transform=feature.geometry;
-			
-			///where to insert wkt
-			document.forms[1].wkt.value=feature.geometry;
-			
-			
-		  
-			};
-
-            
-			////////////////////////////////////////////////////////
-        	//Controls
-        	var select_feature_control = new OpenLayers.Control.
-        	SelectFeature(
-        	lgpx,
-        	{
-        	multiple: false,
-        	toggle: true,
-        	multipleKey: 'shiftKey'
-        	}
-        	);
-
-        	map.addControl(select_feature_control);
-
-        	select_feature_control.activate();
-                    
-
-			//we dont need edit here
-	       	//map.addControl(new OpenLayers.Control.EditingToolbar(lgpx));
-	      }
-	      
-	      document.getElementById('upload_form').style.visibility = 'visible';
-	      document.getElementById('f1_upload_process').style.visibility = 'hidden';
-	      return true;   
-	}
-	/////////////////////////
+	//ajax call to store object
+	
+	//event to fire on map add objects
+	
 
     </script>
 </head>
@@ -255,56 +170,45 @@ function init_map() {
 
 	<div class="container-fluid">
 	    <div class="row_fluid">
-	    	<p id="f1_upload_process">Uploading...<br/></p>
-			<p id="result"></p>
-	    	<form id="upload_form" action="../upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
-    			<legend></legend>
-    			<label for="myFile" style="color: blue;"> File: </label>
-    			<input name="myfile" type="file" />
-    			</br>
-         			  <input type="submit" name="submitGPX" value="Upload" />
-			</form>
- 
-			<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;"></iframe>
-	    	
 	    	
 	    </div>
 	
 		<div class="row-fluid">
 			
 		    <div class="span3">
-		    
-				<form name="formNewGuide" action="hg_editor.php" method="post" >
+		    	
+				<form name="formNewGuide2" action="" method="post" >
 					
-					<legend>Guide details</legend>
+					<legend>Guide details - step 2</legend>
 					
-					<label for="name" style="color: blue;"> Name: </label> 
+					<label for="name" style="color: blue;"> Object name: </label> 
 					<input id="name" value="" type="text" name="name" /> 
 					
-					<label for="subname" style="color: blue;"> Track Sub Name: </label> 
-					<input id="subname" value="" type="text" name="subname" /> 
+					<select title="Select Object Type:" name="type" >
+						<option value="1">Navigation point</option>
+						<option value="2">Information point</option>
 					
-					<label for="summary" style="color: blue;"> Summary text: </label> 
+					</select>
 					
-					<textarea id="summary" value="" type="text" cols="200" rows="5" name="summary" > 
-					</textarea>
-					<label for="navigation" style="color: blue;"> Navigation text: </label> 
-					<textarea id="navigation" value="" type="text" cols="200" rows="5" name="navigation" > 
-					</textarea>
-					
-					<label for="mapname" style="color: blue;"> Map Name: </label> 
-					<input id="mapname" value="" type="text" name="mapname" /> 
-					
-					<label for="trackname" style="color: blue;"> Track Name: </label> 
-					<input id="trackname" value="" type="text" name="trackname" /> 
-						
-					<label for="wkt" style="color: blue;"> Geometry WKT: </label> 
-					<input id="wkt" value="" type="text" name="wkt" readonly="readonly"/> 
+					<label for="proxy" style="color: blue;"> Proximity (m) alert: </label> 
+					<input id="proxy" value="" type="text" name="proxy" /> 
 					
 					
+					<label for="wkt_object" style="color: blue;"> WKT: </label>
+					<input id="wkt_object" value="" type="text" name="wkt_object" readonly="readonly" />  
+					<legend>Lat-Lng Projection:900913</legend>
+					<label for="lat_object" style="color: blue;"> Lat: </label>
+					<input id="lat_object" value="" type="text" name="lat_object" readonly="readonly" />  
+	
+					<label for="lng_object" style="color: blue;"> Lng: </label>
+					<input id="lng_object" value="" type="text" name="lng_object" readonly="readonly" />  
 					
-					<button type="submit" class="btn btn-success" value="Submit"
-						name="SubmitChange">Go To Step 2</button>
+					<legend>Info</legend>
+					<label for="description" style="color: blue;"> Description: </label> 
+					<input id="description" value="" type="text" name="description" /> 
+					</br>
+					<button type="submit" class="btn btn-primary" value="Submit"
+						name="SubmitChange">Save object</button>
 					
 				</form>
 			
@@ -314,12 +218,21 @@ function init_map() {
 			<p></p>
 			<p></p>
 			<div class="span3">
+			<button type="button" class="btn btn-success" value="Draw"
+						name="addObject" onclick="setObjectDraw()">Draw</button>
+		    <button type="button" class="btn btn-success" value="Modify"
+						name="addModify" onclick="setObjectModify()">Modify </button>
+		    <button type="button" class="btn btn-success" value="Pan"
+						name="addPan" onclick="setObjectStopDraw()">Pan </button>
+		    <button type="button" class="btn btn-danger" value="Delete"
+						name="addDelete" onclick="setObjectDelete()">Delete </button>
+		    
 				<p></p>
 				</br>
 			    
 				
 				<div id="map_canvas" style="width: 800px; height: 600px;"></div>
-				<p>*Map centers on the track geometry when upload is succesfull.</p>
+				<p></p>
 			</div>
 			
 			
