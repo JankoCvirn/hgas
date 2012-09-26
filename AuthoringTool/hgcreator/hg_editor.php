@@ -1,16 +1,17 @@
 <?php
 ini_set("session.gc_maxlifetime", "3600");
-require_once  ("inc/utils.php");
+require_once  ("../inc/utils.php");
+require '../inc/hgutils.php';
 
 $page_title='HikeGuide Authoring Tools';
-$brand_text='HikeGuide Creator';
-$hero_text='Create a new guide user interface.';
+$brand_text='HikeGuide Creator - Step 2';
+$hero_text ='Create a new guide user interface.';
 
 session_start();
 
-$msg_status='';
+$msg_status = '';
 
-$username=$_SESSION['username'];
+$username = $_SESSION['username'];
 
 //logout
 if (isset($_REQUEST["logout"])){
@@ -19,10 +20,24 @@ if (isset($_REQUEST["logout"])){
 }
 //back to index.html
 if (!session_is_registered($username)) {
-	header("Location:index.php");
+	header("Location:../index.php");
 }
 
-
+if (isset($_POST['formNewGuide'])){
+	
+	$name=$_POST[''];
+	$subName=$_POST[''];
+	$wkt=$_POST[''];
+	$summary=$_POST[''];
+	$description=$_POST[''];
+	$mapName=$_POST[''];
+	$trackName=$_POST[''];
+	
+	$oHgUtil=new hgutils($username);
+	$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $description, $mapName, $trackName);
+	
+	
+}
 
 
 
@@ -33,8 +48,8 @@ if (!session_is_registered($username)) {
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta charset="utf-8">
 
-<link href="css/bootstrap.css" rel="stylesheet">
-<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="../css/bootstrap.css" rel="stylesheet">
+<link href="../css/bootstrap-responsive.css" rel="stylesheet">
 <style>
       body {
         padding-top: 60px; 
@@ -52,13 +67,12 @@ if (!session_is_registered($username)) {
 
 <script type="text/javascript">
 
-//Start position for the map (hardcoded here for simplicity,
-// but maybe you want to get this from the URL params)
+
 var lat=47.496792
 var lon=7.571726
 var zoom=13
 
-var map; //complex object of type OpenLayers.Map
+var map; 
 
 function init_map() {
 	map = new OpenLayers.Map ("map_canvas", {
@@ -76,8 +90,7 @@ function init_map() {
 	} );
 
 	document.getElementById('f1_upload_process').style.visibility = 'hidden';
-	// Define the map layer
-	// Here we use a predefined layer that will be kept up to date with URL changes
+	
 	layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
 	map.addLayer(layerMapnik);
 	layerCycleMap = new OpenLayers.Layer.OSM.CycleMap("CycleMap");
@@ -107,7 +120,7 @@ function init_map() {
 
 	var size = new OpenLayers.Size(21, 25);
 	var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-	var icon = new OpenLayers.Icon('http://www.openstreetmap.org/openlayers/img/marker.png',size,offset);
+	var icon = new OpenLayers.Icon('../marker/map_start.png',size,offset);
 	layerMarkers.addMarker(new OpenLayers.Marker(lonLat,icon));
 
 	
@@ -137,7 +150,7 @@ function init_map() {
 	       	var lgpx = new OpenLayers.Layer.Vector("Imported track ", {
 	       		strategies: [new OpenLayers.Strategy.Fixed()],
 	       		protocol: new OpenLayers.Protocol.HTTP({
-	       			url: 'upload/testelt-diest.gpx',
+	       			url: '../upload/'+success,
 	       			format: new OpenLayers.Format.GPX()
 	       		}),
 	       		style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
@@ -184,10 +197,10 @@ function init_map() {
 			//Insert event
             map.layers[4].onFeatureInsert = function(feature){
     			
-                point_to_transform=feature.geometry;
+              //  point_to_transform=feature.geometry;
 			
 			///where to insert wkt
-			document.forms[1].wkt.value=point_to_transform.transform(proj_900913,proj_4326);
+			document.forms[1].wkt.value=feature.geometry;
 			
 			
 		  
@@ -211,7 +224,7 @@ function init_map() {
         	select_feature_control.activate();
                     
 
-
+			//we dont need edit here
 	       	//map.addControl(new OpenLayers.Control.EditingToolbar(lgpx));
 	      }
 	      
@@ -234,7 +247,7 @@ function init_map() {
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#"><?php echo $brand_text;?></a>
-          <?php include 'inc/navigation/navigation.php';?>
+          <?php include '../inc/navigation/navigation.php';?>
           
         </div>
       </div>
@@ -244,8 +257,8 @@ function init_map() {
 	    <div class="row_fluid">
 	    	<p id="f1_upload_process">Uploading...<br/></p>
 			<p id="result"></p>
-	    	<form id="upload_form" action="upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
-    			<legend>Track .gpx file-upload -*** testelt-diest.gpx is hard coded at the moment</legend>
+	    	<form id="upload_form" action="../upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
+    			<legend></legend>
     			<label for="myFile" style="color: blue;"> File: </label>
     			<input name="myfile" type="file" />
     			</br>
@@ -261,7 +274,7 @@ function init_map() {
 			
 		    <div class="span3">
 		    
-				<form name="newTrack" action="<?php echo($PHP_SELF)?>" method="post" >
+				<form name="formNewGuide" action="hg_editor.php" method="post" >
 					
 					<legend>Guide details</legend>
 					
@@ -271,11 +284,11 @@ function init_map() {
 					<label for="subname" style="color: blue;"> Track Sub Name: </label> 
 					<input id="subname" value="" type="text" name="subname" /> 
 					
-					<label for="summary" style="color: blue;"> Summary: </label> 
+					<label for="summary" style="color: blue;"> Summary text: </label> 
 					
 					<textarea id="summary" value="" type="text" cols="200" rows="5" name="summary" > 
 					</textarea>
-					
+					<label for="navigation" style="color: blue;"> Navigation text: </label> 
 					<textarea id="navigation" value="" type="text" cols="200" rows="5" name="navigation" > 
 					</textarea>
 					
@@ -284,16 +297,9 @@ function init_map() {
 					
 					<label for="trackname" style="color: blue;"> Track Name: </label> 
 					<input id="trackname" value="" type="text" name="trackname" /> 
-					
-					
-					
-					
+						
 					<label for="wkt" style="color: blue;"> Geometry WKT: </label> 
-					<input id="wkt" value="" type="text" name="wkt" /> 
-					
-					<label for="active" style="color: blue;"> Active: </label> 
-					<input id="active" value="" type="text" name="active" /> 
-					
+					<input id="wkt" value="" type="text" name="wkt" readonly="readonly"/> 
 					
 					
 					
@@ -307,11 +313,13 @@ function init_map() {
 	    
 			<p></p>
 			<p></p>
-			<div class="span1">
+			<div class="span3">
 				<p></p>
-			    <p>Track:</p>
+				</br>
+			    
 				
 				<div id="map_canvas" style="width: 800px; height: 600px;"></div>
+				<p>*Map centers on the track geometry when upload is succesfull.</p>
 			</div>
 			
 			
@@ -322,17 +330,17 @@ function init_map() {
 	</div>
 
 
-	<script src="js/jquery-1.7.1.js"></script>
-	<script src="js/bootstrap-modal.js"></script>
-	<script src="js/bootstrap-dropdown.js"></script>
-	<script src="js/bootstrap-scrollspy.js"></script>
-	<script src="js/bootstrap-tab.js"></script>
-	<script src="js/bootstrap-tooltip.js"></script>
-	<script src="js/bootstrap-popover.js"></script>
-	<script src="js/bootstrap-button.js"></script>
-	<script src="js/bootstrap-collapse.js"></script>
-	<script src="js/bootstrap-carousel.js"></script>
-	<script src="js/bootstrap-typeahead.js"></script>
+	<script src="../js/jquery-1.7.1.js"></script>
+	<script src="../js/bootstrap-modal.js"></script>
+	<script src="../js/bootstrap-dropdown.js"></script>
+	<script src="../js/bootstrap-scrollspy.js"></script>
+	<script src="../js/bootstrap-tab.js"></script>
+	<script src="../js/bootstrap-tooltip.js"></script>
+	<script src="../js/bootstrap-popover.js"></script>
+	<script src="../js/bootstrap-button.js"></script>
+	<script src="../js/bootstrap-collapse.js"></script>
+	<script src="../js/bootstrap-carousel.js"></script>
+	<script src="../js/bootstrap-typeahead.js"></script>
 
 
 </body>

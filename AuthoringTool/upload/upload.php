@@ -6,9 +6,9 @@
    $target_path = $destination_path . basename( $_FILES['myfile']['name']);
  
    if(@move_uploaded_file($_FILES['myfile']['tmp_name'], $target_path)) {
-      $result = 1;
+      $result = $_FILES['myfile']['name'];
    }
  
    sleep(1);
 ?>
-<script language="javascript" type="text/javascript">window.top.window.stopUpload(<?php echo $result; ?>);</script>  
+<script language="javascript" type="text/javascript">window.top.window.stopUpload('<?php echo $result; ?>');</script>  

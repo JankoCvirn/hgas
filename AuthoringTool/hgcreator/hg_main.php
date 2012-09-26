@@ -1,6 +1,6 @@
 <?php
 ini_set("session.gc_maxlifetime", "3600");
-require_once  ("inc/utils.php");
+require_once  ("../inc/utils.php");
 
 
 
@@ -22,7 +22,7 @@ if (isset($_REQUEST["logout"])){
 }
 //back to index.html
 if (!session_is_registered($username)) {
-	header("Location:index.php");}
+	header("Location:../index.php");}
 	
 
 ?>
@@ -36,32 +36,32 @@ if (!session_is_registered($username)) {
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px; 
       }
     </style>
     
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet">
 
     
-<link rel="stylesheet" href="datatables/media/css/demo_page.css">
-<link rel="stylesheet" href="datatables/media/css/demo_table.css">
+<link rel="stylesheet" href="../datatables/media/css/demo_page.css">
+<link rel="stylesheet" href="../datatables/media/css/demo_table.css">
 
 
-<script src="js/jquery-1.7.1.min.js">
+<script src="../js/jquery-1.7.1.min.js">
         </script>
 
 <script type="text/javascript"
-	src="datatables/media/js/jquery.dataTables.js"></script>
+	src="../datatables/media/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {
 	$('#track_table').dataTable( {
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "inc/data_sources/data_source_track.php"
+		"sAjaxSource": "../inc/data_sources/data_source_track.php"
 	} );    
 	  
 	
@@ -88,7 +88,7 @@ $(document).ready(function() {
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#"><?php echo $brand_text;?></a>
-          <?php include 'inc/navigation/navigation.php';?>
+          <?php include '../inc/navigation/navigation.php';?>
           
         </div>
       </div>
@@ -103,7 +103,7 @@ $(document).ready(function() {
             <p><?php echo $hero_text;?></p>
             
           </div>
-          <!-- Available tracks -->
+          <!-- Available guides -->
           <div class="row-fluid">
             <table id="track_table" class="display">
 				<thead>
@@ -111,11 +111,14 @@ $(document).ready(function() {
 						<th>Id</th>
 						<th>Name</th>
 						<th>SubName</th>
-						<th>Track summary</th>
+						<th>Summary</th>
+						<th>Navigation</th>
 						<th>MapName</th>
 						<th>TrackName</th>
 						<th>Active</th>
 						<th>Last Update</th>
+						<th>Owner</th>
+						<th>Created</th>
 			
 					</tr>
 				</thead>
@@ -130,7 +133,10 @@ $(document).ready(function() {
 						<td></td>
 						
 						<td></td>
+						<td></td>
+						<td></td>
 						
+						<td></td>
 						
 			
 					</tr>
@@ -147,7 +153,7 @@ $(document).ready(function() {
       <hr>
 
       <footer>
-        <p><?php include 'inc/footer/footer.php'?></p>
+        <p><?php include '../inc/footer/footer.php'?></p>
       </footer>
     </div> <!-- /container -->
 
@@ -157,16 +163,16 @@ $(document).ready(function() {
     
 <!--    <script src="js/bootstrap-transition.js"></script>-->
 <!--    <script src="js/bootstrap-alert.js"></script>-->
-    <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap-tab.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-    <script src="js/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="../js/bootstrap-modal.js"></script>
+    <script src="../js/bootstrap-dropdown.js"></script>
+    <script src="../js/bootstrap-scrollspy.js"></script>
+    <script src="../js/bootstrap-tab.js"></script>
+    <script src="../js/bootstrap-tooltip.js"></script>
+    <script src="../js/bootstrap-popover.js"></script>
+    <script src="../js/bootstrap-button.js"></script>
+    <script src="../js/bootstrap-collapse.js"></script>
+    <script src="../js/bootstrap-carousel.js"></script>
+    <script src="../js/bootstrap-typeahead.js"></script>
 
   </body>
 </html>
