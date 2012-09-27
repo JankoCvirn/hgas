@@ -14,7 +14,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="hg_main.php">Guide Overview</a></li>
 	              <li><a href="../hgcreator/hg_creator.php">Guide Manager</a></li>
-				  <li><a href="../hgcreator/hg_editor.php">Guide Editor</a></li>   
+				  <!--  <li><a href="../hgcreator/hg_editor.php">Guide Editor</a></li>-->   
 	              <li><a href="../hgcreator/hg_publisher.php">Guide Publisher</a></li>
                 </ul>
               </li>
@@ -29,7 +29,7 @@
             <ul class="dropdown-menu">
               <!--<li><a href="#">Profile</a></li>
               <li class="divider"></li>
-              --><li><a href="main.php?logout=true">Sign Out</a></li>
+              --><li><a href="../main.php?logout=true">Sign Out</a></li>
             </ul>
           </div>
             

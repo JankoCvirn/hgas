@@ -79,6 +79,7 @@ var drawControls;
 var trackName='test v1';
 var pointLayer;
 var pointControl;
+var modifyControl;
 
 function init_map() {
 	map = new OpenLayers.Map ("map_canvas", {
@@ -126,23 +127,60 @@ function init_map() {
 	var dataExtent=	vector.getDataExtent();
 	map.zoomToExtent(dataExtent);
 
-	
-	 
-	
-	
+	modifyControl = new OpenLayers.Control.ModifyFeature(pointLayer);
+	map.addControl(modifyControl);	
 
-}
+    }
+
+
 	function setObjectDraw(){
 
 		pointControl=new OpenLayers.Control.DrawFeature(pointLayer,
 	            OpenLayers.Handler.Point);
 		map.addControl(pointControl);
+		modifyControl.deactivate();
 		pointControl.activate();   
 		}
 
 	function setObjectStopDraw(){
 		pointControl.deactivate();
+		modifyControl.deactivate();
 		}
+
+	function setObjectModifyDrag(){
+		pointControl.deactivate();
+		mode = OpenLayers.Control.ModifyFeature.DRAG;
+		
+		modifyControl.mode=mode;
+		
+		modifyControl.activate();
+		}
+
+	function setObjectDelete(){
+		pointControl.deactivate();
+		modifyControl.deactivate();
+		pointLayer.removeAllFeatures();
+
+		}
+
+	function validateForm()
+	{
+	var x=document.forms["formNewGuide2"]["name"].value;
+	if (x==null || x=="")
+	  {
+	  alert("Object Name must be filled out");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
+	var x2=document.forms["formNewGuide2"]["wkt_object"].value;
+	if (x2==null || x2=="")
+	  {
+	  alert("No spatial object created.");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
+	 
+	}
 
 	//ajax call to store object
 	
@@ -170,14 +208,16 @@ function init_map() {
 
 	<div class="container-fluid">
 	    <div class="row_fluid">
-	    	
+	    	<div class="progress progress-striped">
+  <div class="bar" style="width: 66%;"></div>
+</div>
 	    </div>
 	
 		<div class="row-fluid">
 			
 		    <div class="span3">
 		    	
-				<form name="formNewGuide2" action="" method="post" >
+				<form name="formNewGuide2" action="" method="post" onsubmit="return validateForm()" >
 					
 					<legend>Guide details - step 2</legend>
 					
@@ -190,9 +230,9 @@ function init_map() {
 					
 					</select>
 					
-					<label for="proxy" style="color: blue;"> Proximity (m) alert: </label> 
-					<input id="proxy" value="" type="text" name="proxy" /> 
-					
+					<label for="proxy" style="color: blue;"> Proximity (50m) alert: </label> 
+					<input id="proxy" value="50" type="text" name="proxy" /> 
+					<label for="proxy" style="color: blue;"> *default 50m </label> 
 					
 					<label for="wkt_object" style="color: blue;"> WKT: </label>
 					<input id="wkt_object" value="" type="text" name="wkt_object" readonly="readonly" />  
@@ -221,7 +261,7 @@ function init_map() {
 			<button type="button" class="btn btn-success" value="Draw"
 						name="addObject" onclick="setObjectDraw()">Draw</button>
 		    <button type="button" class="btn btn-success" value="Modify"
-						name="addModify" onclick="setObjectModify()">Modify </button>
+						name="addModify" onclick="setObjectModifyDrag()">Modify </button>
 		    <button type="button" class="btn btn-success" value="Pan"
 						name="addPan" onclick="setObjectStopDraw()">Pan </button>
 		    <button type="button" class="btn btn-danger" value="Delete"

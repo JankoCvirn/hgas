@@ -217,7 +217,9 @@ function init_map() {
         	map.addControl(select_feature_control);
 
         	select_feature_control.activate();
-                    
+
+        	
+        	            
 
 			//we dont need edit here
 	       	//map.addControl(new OpenLayers.Control.EditingToolbar(lgpx));
@@ -262,7 +264,36 @@ function init_map() {
 	    }
 	  });
 	});
-	
+	$('input').keyup(function() {
+	    var $th = $(this);
+	    $th.val( $th.val().replace(/[^a-zA-Z0-9]/g, function(str) { alert('You typed " ' + str + ' ".\n\nPlease use only letters and numbers.'); return ''; } ) );
+	});
+
+	function validateForm()
+	{
+	var x=document.forms["formNewGuide"]["name"].value;
+	if (x==null || x=="")
+	  {
+	  alert("GuideName must be filled out");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
+	var x1=document.forms["formNewGuide"]["subname"].value;
+	if (x1==null || x1=="")
+	  {
+	  alert("Guide SubName must be filled out");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
+	var x2=document.forms["formNewGuide"]["wkt"].value;
+	if (x2==null || x2=="")
+	  {
+	  alert("Please upload track geometry.");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
+	 
+	}
 
     </script>
 </head>
@@ -285,6 +316,11 @@ function init_map() {
 
 	<div class="container-fluid">
 	    <div class="row_fluid">
+	    <div class="row_fluid">
+	    	<div class="progress progress-striped">
+  <div class="bar" style="width: 33%;"></div>
+</div>
+	    </div>
 	    	<p id="f1_upload_process">Uploading...<br/></p>
 			<p id="result"></p>
 	    	<form id="upload_form" action="../upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
@@ -304,7 +340,7 @@ function init_map() {
 			
 		    <div class="span3">
 		    
-				<form name="formNewGuide" action="hg_editor.php" method="post" >
+				<form name="formNewGuide" action="hg_editor.php" method="post" onsubmit="return validateForm()" >
 					
 					<legend>Guide details</legend>
 					
