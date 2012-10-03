@@ -8,7 +8,7 @@ session_start();
 
 $page_title='HikeGuide Authoring Tools';
 $brand_text='HikeGuide Overview';
-$hero_text='HikeGuide tracks.';
+$hero_text='HikeGuide guides.';
 
 
 $msg_status='';
@@ -113,12 +113,12 @@ $(document).ready(function() {
 						<th>SubName</th>
 						<th>Summary</th>
 						<th>Navigation</th>
-						<th>MapName</th>
-						<th>TrackName</th>
-						<th>Active</th>
-						<th>Last Update</th>
-						<th>Owner</th>
+						
 						<th>Created</th>
+						<th>Created by</th>
+						<th>Last update</th>
+						<th>Active</th>
+						<th>Downloads</th>
 			
 					</tr>
 				</thead>
@@ -134,19 +134,23 @@ $(document).ready(function() {
 						
 						<td></td>
 						<td></td>
-						<td></td>
 						
-						<td></td>
-						
-			
-					</tr>
 			
 				</tbody>
 			</table>
               
             
           </div><!--/row-->
+          <!-- map holder -->
+          <div class="row_fluid">
           
+          
+          </div>
+          <!-- guide details -->
+          <div class="row_fluid">
+          
+          
+          </div>
         </div><!--/span-->
       </div><!--/row-->
 
@@ -157,12 +161,7 @@ $(document).ready(function() {
       </footer>
     </div> <!-- /container -->
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     
-<!--    <script src="js/bootstrap-transition.js"></script>-->
-<!--    <script src="js/bootstrap-alert.js"></script>-->
     <script src="../js/bootstrap-modal.js"></script>
     <script src="../js/bootstrap-dropdown.js"></script>
     <script src="../js/bootstrap-scrollspy.js"></script>

@@ -22,15 +22,11 @@ if (!session_is_registered($username)) {
 	header("Location:../index.php");
 }
 
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
 <meta charset="utf-8">
 
 <link href="../css/bootstrap.css" rel="stylesheet">
@@ -325,10 +321,10 @@ function init_map() {
 			<p id="result"></p>
 	    	<form id="upload_form" action="../upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
     			<legend></legend>
-    			<label for="myFile" style="color: blue;"> File: </label>
+    			<label for="myFile" style="color: blue;"> GPX File location: </label>
     			<input name="myfile" type="file" />
     			</br>
-         			  <input type="submit" name="submitGPX" value="Upload" />
+         			  <button type="submit" name="submitGPX" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
 			</form>
  
 			<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;"></iframe>

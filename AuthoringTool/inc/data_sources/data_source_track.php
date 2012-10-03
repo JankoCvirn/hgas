@@ -4,7 +4,7 @@
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
 	 * you want to insert a non-database field (for example a counter or static image)
 	 */
-	$aColumns = array( 'id','name', 'sub_name', 'summary','map_name','track_name','active','updated' );
+	$aColumns = array( 'id','name', 'sub_name', 'summary','navigation','created','uid','updated','active','downloads' );
 	
 	/* Indexed column (used for fast and accurate table cardinality) */
 	$sIndexColumn = "id";

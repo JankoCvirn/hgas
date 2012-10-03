@@ -1,10 +1,7 @@
 <?php 
 require_once("php/Sql.php");
 
-//TODO
-//1.method to save main guide data
-//2.method to save info points
-//3.method to save nav points
+
 
 class hgutils
 {
@@ -18,6 +15,7 @@ class hgutils
 	private $tbl_guide="track";
 	private $tbl_nav="navspot";
 	private $tbl_info="infospot";
+	private $tbl_poi="poispot";
 	public $uid;
 	
 	//get user id
@@ -50,21 +48,14 @@ class hgutils
 		
 	}
 	
-	//save main guide data
-	/*$name=$_POST[''];
-	$subName=$_POST[''];
-	$wkt=$_POST[''];
-	$summary=$_POST[''];
-	$description=$_POST[''];
-	$mapName=$_POST[''];
-	$trackName=$_POST[''];*/
+	
 	
 	public function setGuideData($name,$subName,$wkt,$summary,$navigation,$mapName,$trackName){
 		
 		$creation_time=time();
 		$this->oSql=new Sql($this->db_guide);
 		$this->oSql->setErrorhandling(true, true);
-		$this->sSql="INSERT  INTO '".$this->tbl_guide."' (name,sub_name,summary,map_name,
+		$this->sSql="INSERT IGNORE INTO ".$this->tbl_guide." (name,sub_name,summary,map_name,
 		                                                 track_name,navigation,
 		                                                 wkt,created,uid)
 					 VALUES('".$name."','".$subName."','".$summary."','".$mapName."',
@@ -79,22 +70,47 @@ class hgutils
 	
 	//save info point
 	
-	public function setInfoPoint(){
+	public function setInfoPoint($parent_id,$desc,$picture,$wkt,$oname){
+		
+		$creation_time=time();
+		$this->oSql=new Sql($this->db_guide);
+		$this->oSql->setErrorhandling(true, true);
+		$this->sSql="INSERT  INTO ".$this->tbl_info." (parent_id,description,picture,wkt,created,uid,name)
+		VALUES('".$parent_id."','".$desc."','".$picture."','".$wkt."','".$creation_time."','".$this->uid."','".$oname."'
+		) ";
+		
+		
+		$this->oSql->q($this->sSql);
 		
 	}
 	
 	//save nav point
 	
-	public function setNavPoint(){
+	public function setNavPoint($parent_id,$desc,$picture,$wkt,$oname){
 		
+		$creation_time=time();
+		$this->oSql=new Sql($this->db_guide);
+		$this->oSql->setErrorhandling(true, true);
+		$this->sSql="INSERT  INTO ".$this->tbl_nav." (parent_id,description,picture,wkt,created,uid,name)
+		VALUES('".$parent_id."','".$desc."','".$picture."','".$wkt."','".$creation_time."','".$this->uid."','".$oname."'
+		) ";
+		$this->oSql->q($this->sSql);
 		
 	}
 	
 	//save proxy point
 	
-	public function setProxyPoint(){
+	public function setProxyPoint($parent_id,$desc,$picture,$wkt,$prox,$oname){
+		
+		$creation_time=time();
+		$this->oSql=new Sql($this->db_guide);
+		$this->oSql->setErrorhandling(true, true);
+		$this->sSql="INSERT  INTO ".$this->tbl_poi." (parent_id,description,picture,wkt,created,uid,proxalert,name)
+		VALUES('".$parent_id."','".$desc."','".$picture."','".$wkt."','".$creation_time."','".$this->uid."','".$prox."','".$oname."'
+		) ";
 		
 		
+		$this->oSql->q($this->sSql);
 		
 	}
 }

@@ -1,13 +1,28 @@
 <?php
+//TODO 
+//populate array on guide selected
+//draw all in a layer
+//add select control
+//populate from db the fields
+//should be done with mapserver or geoserver
+
 ini_set("session.gc_maxlifetime", "3600");
-require_once  ("inc/utils.php");
+require_once  ("../inc/utils.php");
 
 $page_title='HikeGuide Authoring Tools';
 $brand_text='HikeGuide Editor';
 
 session_start();
 
+
+
+
+
 $msg_status='';
+
+$page_title='HikeGuide Authoring Tools';
+$brand_text='HikeGuide Publisher';
+$hero_text='HikeGuide guides.';
 
 $username=$_SESSION['username'];
 
@@ -18,7 +33,7 @@ if (isset($_REQUEST["logout"])){
 }
 //back to index.html
 if (!session_is_registered($username)) {
-	header("Location:index.php");}
+	header("Location:../index.php");}
 	
 
 	
@@ -34,22 +49,59 @@ if (!session_is_registered($username)) {
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
     </style>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet">
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="../datatables/media/css/demo_page.css">
+<link rel="stylesheet" href="../datatables/media/css/demo_table.css">
 
-    <!-- Le fav and touch icons -->
-<!--    <link rel="shortcut icon" href="../assets/ico/favicon.ico">-->
+
+<script src="../js/jquery-1.7.1.min.js">
+        </script>
+
+<script type="text/javascript"
+	src="../datatables/media/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$('#track_table').dataTable( {
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "../inc/data_sources/data_source_track.php"
+	} );    
+	  
+	
+	  
+        
+    } );
+
+$('#track_table tbody tr').live('click', function () {
+	
+    var nTds = $('td', this);
+	
+    var name = $(nTds[1]).text();
     
+    oFormObject = document.forms['selectForm'];
+    oFormObject.elements["guide_name"].value = name;
+    o
+
+	
+    
+    
+    
+} );
+    
+
+		
+
+		
+        	
+        </script>
   </head>
 
   <body>
@@ -63,38 +115,73 @@ if (!session_is_registered($username)) {
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#"><?php echo $brand_text;?></a>
-          <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-user"></i> Loged as: <?php echo $username?>
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <!--<li><a href="#">Profile</a></li>
-              <li class="divider"></li>
-              --><li><a href="main.php?logout=true">Sign Out</a></li>
-            </ul>
-          </div>
-          
+          <?php include '../inc/navigation/navigation.php';?>
         </div>
       </div>
     </div>
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <?php include'inc/navigation/navigation.php'?>
-          </div><!--/.well -->
-        </div><!--/span-->
+        
         <div class="span9">
-          <div class="hero-unit">
-            
-            <p></p>
-            
-          </div>
+          
           <div class="row-fluid">
+          <h2>HGuides:</h2>
+            <table id="track_table" class="display">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Name</th>
+						<th>SubName</th>
+						<th>Summary</th>
+						<th>Navigation</th>
+						
+						<th>Created</th>
+						<th>Created by</th>
+						<th>Last update</th>
+						<th>Active</th>
+						<th>Downloads</th>
+			
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						
+						<td></td>
+						<td></td>
+						
+			
+				</tbody>
+			</table>
             
-              
+            <h3></h3>
+            <table class="table-bordered">
+			<form name="selectForm" action="<?php echo($PHP_SELF)?>" method="post" >
+			<tr><td><span class="label label-info">Guide</span>
+			</td>
+			</tr>
+			<tr class="success"><td>
+			<label for="guide_name" style="color: blue;"> Guide Name: </label>
+			<input id="guide_name" value="" type="text" name="guide_name" readonly="readonly"  />
+			</td>
+			</tr>
+			
+			<tr class="success"><td>
+			<button type="submit" class="btn btn-success"  value="Submit"  name="SubmitGuideName">Draw</button>
+			</td>	
+			</tr>
+			
+			</form>
+			</table>
+            
+            
             
           </div><!--/row-->
           
@@ -104,26 +191,21 @@ if (!session_is_registered($username)) {
       <hr>
 
       <footer>
-        <p><?php include 'inc/footer/footer.php'?></p>
+        <p><?php include '../inc/footer/footer.php'?></p>
       </footer>
     </div> <!-- /container -->
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery-1.7.1.js"></script>
-<!--    <script src="js/bootstrap-transition.js"></script>-->
-<!--    <script src="js/bootstrap-alert.js"></script>-->
-    <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap-tab.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-    <script src="js/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script>
+    
+    <script src="../js/bootstrap-modal.js"></script>
+    <script src="../js/bootstrap-dropdown.js"></script>
+    <script src="../js/bootstrap-scrollspy.js"></script>
+    <script src="../js/bootstrap-tab.js"></script>
+    <script src="../js/bootstrap-tooltip.js"></script>
+    <script src="../js/bootstrap-popover.js"></script>
+    <script src="../js/bootstrap-button.js"></script>
+    <script src="../js/bootstrap-collapse.js"></script>
+    <script src="../js/bootstrap-carousel.js"></script>
+    <script src="../js/bootstrap-typeahead.js"></script>
 
   </body>
 </html>
