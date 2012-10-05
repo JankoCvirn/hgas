@@ -385,6 +385,7 @@ function init_map() {
 		}
 	else{
 		for (var i=0;i<info_array.length;i++){
+			
 			var info_geom = new OpenLayers.Geometry.fromWKT(info_array[i].WKT); 
 	
 			var infoFeature = new OpenLayers.Feature.Vector(info_geom,null, {}); 

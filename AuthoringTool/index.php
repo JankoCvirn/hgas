@@ -36,7 +36,7 @@ if (isset($_POST['btnLogin'])){
 	
 	else 
 	{
-		$msg_status='Authentication failed.Please contact our Technical support.';
+		$msg_status='Authentication failed.';
 	}
 }
 
@@ -49,7 +49,10 @@ if (isset($_POST['btnLogin'])){
     <title>HG Authoring Tool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="Janko Cvirn">
+    <link rel="icon" 
+      type="../img/icon" 
+      href="favicon.ico" />
 
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -80,7 +83,7 @@ if (isset($_POST['btnLogin'])){
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">HikeGuide</a>
+          <a class="brand" href="#">HikeGuide Manager</a>
           
         </div>
       </div>
@@ -91,11 +94,11 @@ if (isset($_POST['btnLogin'])){
         
         <div class="span9">
           <div class="hero-unit">
-            <h1></h1>
+            <h1><img src="../img/logo/HG_logo_transparentbg.png" ></h1>
             <p>
             <form method="post" action="<?php echo($PHP_SELF)?>">
-            <label>Username:</label><input name="username"  />
-            <label>Password:</label><input name="password" type="password"/><p></p>
+            <label>Username:</label><input name="username" type="text" placeholder="username" />
+            <label>Password:</label><input name="password" type="password" placeholder="password" /><p></p>
             <button type="submit" name="btnLogin" class="btn btn-primary btn-large">Login</button>
             </form>
             
@@ -103,7 +106,7 @@ if (isset($_POST['btnLogin'])){
             <p><?php echo $msg_status;?></p>
           </div>
           
-          <?php echo $free;?>
+          
         </div><!--/span-->
       </div><!--/row-->
 
@@ -113,19 +116,19 @@ if (isset($_POST['btnLogin'])){
         <p>&copy; HikeGuide 2012</p>
       </footer>
     </div> 
-    <script src="js/jquery-1.7.1.js"></script>
+    <script src="../js/jquery-1.7.1.js"></script>
     
-    <script src="js/bootstrap-alert.js"></script>
-    <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap-tab.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-    <script src="js/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script>
+    <script src="../js/bootstrap-alert.js"></script>
+    <script src="../js/bootstrap-modal.js"></script>
+    <script src="../js/bootstrap-dropdown.js"></script>
+    <script src="../js/bootstrap-scrollspy.js"></script>
+    <script src="../js/bootstrap-tab.js"></script>
+    <script src="../js/bootstrap-tooltip.js"></script>
+    <script src="../js/bootstrap-popover.js"></script>
+    <script src="../js/bootstrap-button.js"></script>
+    <script src="../js/bootstrap-collapse.js"></script>
+    <script src="../js/bootstrap-carousel.js"></script>
+    <script src="../js/bootstrap-typeahead.js"></script>
 
   </body>
 </html>
