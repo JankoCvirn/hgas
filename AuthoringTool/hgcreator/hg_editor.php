@@ -43,12 +43,21 @@ if (isset($_POST['SubmitChange'])){
 	$subName=$_POST['subname'];
 	$wkt=$_POST['wkt'];
 	$summary=$_POST['summary'];
-	$navigation=$_POST['navigation'];
-	$mapName=$_POST['mapname'];
-	$trackName=$_POST['trackname'];
+	//$navigation=$_POST['navigation'];
+	//$mapName=$_POST['mapname'];
+	//$trackName=$_POST['trackname'];
+	$tcolor=$_POST['tcolor'];
+	$bcolor=$_POST['bcolor'];
+	$distance=$_POST['distance'];
+	$region=$_POST['region'];
+	$difficulty=$_POST['difficulty'];
+	$nature=$_POST['nature'];
+	
+	
 	
 	$oHgUtil=new hgutils($username);
-	$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $navigation, $mapName, $trackName);
+	$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $tcolor, $bcolor, $distance, $region, $difficulty, $nature);
+	//$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $navigation, $mapName, $trackName);
 	
 	
 	

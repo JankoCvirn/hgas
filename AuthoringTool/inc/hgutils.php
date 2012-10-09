@@ -50,17 +50,14 @@ class hgutils
 	
 	
 	
-	public function setGuideData($name,$subName,$wkt,$summary,$navigation,$mapName,$trackName){
+	public function setGuideData($name,$subName,$wkt,$summary,$tcolor,$bcolor,$distance,$region,$difficulty,$nature){
 		
 		$creation_time=time();
 		$this->oSql=new Sql($this->db_guide);
 		$this->oSql->setErrorhandling(true, true);
-		$this->sSql="INSERT IGNORE INTO ".$this->tbl_guide." (name,sub_name,summary,map_name,
-		                                                 track_name,navigation,
-		                                                 wkt,created,uid)
-					 VALUES('".$name."','".$subName."','".$summary."','".$mapName."',
-		                    '".$trackName."','".$navigation."',
-							'".$wkt."','".$creation_time."','".$this->uid."'
+		$this->sSql="INSERT IGNORE INTO ".$this->tbl_guide." (name,sub_name,summary,wkt,created,uid,tcolor,bcolor,distance,region,difficulty,nature)
+					 VALUES('".$name."','".$subName."','".$summary."','".$wkt."','".$creation_time."','".$this->uid."',
+					        '".$tcolor."','".$bcolor."','".$distance."','".$region."','".$difficulty."','".$nature."'			 		
 							) ";
 		
 		

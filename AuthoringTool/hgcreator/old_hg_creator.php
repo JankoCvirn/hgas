@@ -3,7 +3,7 @@ ini_set("session.gc_maxlifetime", "3600");
 require_once  ("../inc/utils.php");
 
 $page_title='HikeGuide Authoring Tools';
-$brand_text="Hiker's Guide Creator - Step 1";
+$brand_text='HikeGuide Creator - Step 1';
 $hero_text ='Create a new guide user interface.';
 
 session_start();
@@ -126,11 +126,6 @@ function init_map() {
 	    document.getElementById('f1_upload_process').style.visibility = 'visible';
 	    return true;
 	}
-
-	function uploadLogo(){
-
-		
-		}
 
 	function stopUpload(success){
 	      var result = '';
@@ -317,183 +312,81 @@ function init_map() {
 
 	<div class="container-fluid">
 	    <div class="row_fluid">
-	     <div class="span9">
+	    <div class="row_fluid">
+	    	<div class="progress progress-striped">
+  <div class="bar" style="width: 33%;"></div>
+</div>
+	    </div>
 	    	<p id="f1_upload_process">Uploading...<br/></p>
 			<p id="result"></p>
-			<table class="table table-bordered">
-			
 	    	<form id="upload_form" action="../upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
-    		
-    			<tr><td>Load the new track file</td></tr>
-    			<tr>
-    			<td><label for="myFile" style="color: blue;">GPX File location  </label></td>
-    			</tr>
-    			<tr>
-    			<td><input name="myfile" type="file" /></br>
-    			
-         			  <button type="submit" name="submitGPX" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button></td>
-				</tr>
-				<tr>
-				<td>
-				<div id="map_canvas" style="width: 650px; height: 800px;"></div>
-				<p>*Map centers on the track geometry when upload is succesfull.</p>
-				</td>
-				</tr>
+    			<legend></legend>
+    			<label for="myFile" style="color: blue;"> GPX File location: </label>
+    			<input name="myfile" type="file" />
+    			</br>
+         			  <button type="submit" name="submitGPX" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
 			</form>
- 			</table>
+ 
 			<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;"></iframe>
 	    	
-	     </div>
+	    	
 	    </div>
 	
 		<div class="row-fluid">
 			
 		    <div class="span3">
-		    <p>&nbsp;</p>
-		    <p></p>
-		    <table class="table table-bordered">
-				<form name="formNewGuide" action="hg_editor.php" method="post" onsubmit="return validateForm()" class="form-inline" >
-					<tr>
-					<td>Describe the new Hiker's Guide File</td>
-					</tr>
-					<tr>
-						<td>
-						<label for="name" style="color: blue;"> Name: </label> 
-						<input id="name" value="" type="text" name="name" /> 
-						<span id="validateName"><?php if ($error) { echo $error['msg']; } ?></span>
-						</td>
-						<td>
-						<label for="name" style="color: blue;"> Text color: </label> 
-						<select id="tcolor" name="tcolor">
-							<option value="black">Black</option>
-							<option value="white">White</option>
-						</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="subname" style="color: blue;"> Sub Name: </label> 
-							<input id="subname" value="" type="text" name="subname" /> 
-						</td>
-						<td>
-							<label for="name" style="color: blue;"> Background color: </label> 
-							<select id="bcolor" name="bcolor">
-								<option value="black">Black</option>
-								<option value="white">White</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="logoFile" style="color: blue;">Logo file location: </label>
-						</td>
-						<td>
-							<input name="logoFile" type="file" />
-						</td>
-						<td>
-							<button type="submit" name="submitLogo" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
-							
-						</td>
-					</tr>
-			</table>
-			<table class="table table-bordered">
+		    
+				<form name="formNewGuide" action="hg_editor.php" method="post" onsubmit="return validateForm()" >
 					
-					<tr>
-						<td>
-							<label for="pic1" style="color: blue;">Picture 1 file location: </label>
-							</br>
-							<input name="pic1" type="file" class="input-mini"  placeholder=".input-mini"/>
-							</br>
-							<button type="submit" name="submitPic1" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
-							</br>
-						</td>
-						<td>
-							<label for="pic2" style="color: blue;">Picture 2 file location: </label>
-							</br>
-							<input name="pic2" type="file" />
-							</br>
-							<button type="submit" name="submitPic2" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
-							</br>
-						</td>
-					</tr>
-			
-						<tr>
-							<td>
-								<label for="pic3" style="color: blue;">Picture 3 file location: </label>
-							</br>
-								<input name="pic3" type="file" />
-							</br>
-								<button type="submit" name="submitPic3" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
-								
-							</td>
-							<td>
-								<label for="pic4" style="color: blue;">Picture 4 file location: </label>
-								</br>
-								<input name="pic4" type="file" />
-								</br>
-								<button type="submit" name="submitPic4" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
-								
-							</td>
-						</tr>
-		    </table>
-		    <table class="table table-bordered">
-		    <tr>
-		        <td>
-		        <label for="distance" style="color: blue;"> Distance: </label> 
-							<input id="distance" value="" type="text" name="distance" /> 
-		        </td>
-		        <td>
-		        <label for="region" style="color: blue;"> Region: </label> 
-							<input id="region" value="" type="text" name="region" /> 
-		        </td>
-		    </tr>
-		    <tr>
-		       <td>
-		       
-		        <label for="difficulty" style="color: blue;"> Difficulty: </label> 
-							<input id="difficulty" value="" type="text" name="difficulty" /> 
-		        
-		       </td>
-		       
-		       <td>
-		        <label for="nature" style="color: blue;"> Nature: </label> 
-							<input id="nature" value="" type="text" name="nature" /> 
-		        </td>
-		       
-		    </tr>
-			<tr>
-			    <td>
+					<legend>Guide details</legend>
+					
+					<label for="name" style="color: blue;"> Name: </label> 
+					<input id="name" value="" type="text" name="name" /> 
+					<span id="validateName"><?php if ($error) { echo $error['msg']; } ?></span>
+					
+					<label for="subname" style="color: blue;"> Track Sub Name: </label> 
+					<input id="subname" value="" type="text" name="subname" /> 
+					
 					<label for="summary" style="color: blue;"> Summary text: </label> 
-					<textarea id="summary" value="" type="text" cols="200" rows="5" name="summary" ></textarea>
-				 </td>
-			</tr>
-				
-				<tr><td><label for="wkt" style="color: blue;"> Geometry WKT: </label> 
-					<input id="wkt" value="" type="text" name="wkt" readonly="readonly"/> </td></tr>
-				<tr><td>
-				<button id="submitChange" type="submit" class="btn btn-success" value="Submit"
-						name="SubmitChange">Go To Step 2</button>
-				</td></tr>
-			</table>
-			
-			
+					
+					<textarea id="summary" value="" type="text" cols="200" rows="5" name="summary" > 
+					</textarea>
+					<label for="navigation" style="color: blue;"> Navigation text: </label> 
+					<textarea id="navigation" value="" type="text" cols="200" rows="5" name="navigation" > 
+					</textarea>
+					
+					<label for="mapname" style="color: blue;"> Map Name: </label> 
+					<input id="mapname" value="" type="text" name="mapname" /> 
+					
+					<label for="trackname" style="color: blue;"> Track Name: </label> 
+					<input id="trackname" value="" type="text" name="trackname" /> 
 						
+					<label for="wkt" style="color: blue;"> Geometry WKT: </label> 
+					<input id="wkt" value="" type="text" name="wkt" readonly="readonly"/> 
+					
+					
+					
+					<button id="submitChange" type="submit" class="btn btn-success" value="Submit"
+						name="SubmitChange">Go To Step 2</button>
+					
+				</form>
+			
+			
 			</div>
 	    
+			<p></p>
+			<p></p>
+			<div class="span3">
+				<p></p>
+				</br>
+			    
+				
+				<div id="map_canvas" style="width: 800px; height: 600px;"></div>
+				<p>*Map centers on the track geometry when upload is succesfull.</p>
+			</div>
+			
 			
 		</div>
-			
-		<div class="row">
-			<div class="span3">
-			
-				
-			
-			</form>
-			</div>
-		
-		</div>	
-			
-		
 
 
 
