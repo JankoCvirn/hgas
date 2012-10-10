@@ -1,6 +1,6 @@
 <?php
 ini_set("session.gc_maxlifetime", "3600");
-require_once  ("../inc/utils.php");
+require_once  ("../inc/hgutils.php");
 
 $page_title='HikeGuide Authoring Tools';
 $brand_text='HikeGuide Creator - Step 3 (upload map icons)';
@@ -41,26 +41,56 @@ if (isset($_POST['SubmitDetails'])){
 	$oHgUtil=new hgutils($username);
 	$oHgUtil->setGuideData($name, $subName, $wkt, $summary, $tcolor, $bcolor, $distance, $region, $difficulty, $nature);
 	
-	$cmd='mkdir '.$name;
-	echo shell_exec($cmd);
+	//$cmd='mkdir '.$name;
+	//echo shell_exec($cmd);
 	
 	
 	$destination_path = getcwd().DIRECTORY_SEPARATOR;
 	//logo upload
-	$target_path_logo = $destination_path.'/'.$name.'/' . basename( $_FILES['logoFile']['name']);
+	$target_path_logo = $destination_path.'logo/'.$name.'-'. basename( $_FILES['logoFile']['name']);
 	
-	@move_uploaded_file($_FILES['logoFile']['tmp_name'], $target_path) ;
-	
+	$result_logo=0;
+	if (@move_uploaded_file($_FILES['logoFile']['tmp_name'], $target_path_logo)){
+		
+		$result_logo=1;
+	} 
 	
 	//pic1 upload
+	$target_path_pic1 = $destination_path.'logo/'.$name.'-'. basename( $_FILES['pic1']['name']);
+	
+	$result_pic1=0;
+	if (@move_uploaded_file($_FILES['pic1']['tmp_name'], $target_path_pic1)){
+	
+		$result_pic1=1;
+	}
 	
 	
 	//pic2 upload
+	$target_path_pic2 = $destination_path.'logo/'.$name.'-'. basename( $_FILES['pic2']['name']);
+	
+	$result_pic2=0;
+	if (@move_uploaded_file($_FILES['pic2']['tmp_name'], $target_path_pic2)){
+	
+		$result_pic2=1;
+	}
 	
 	//pic3 upload
+	$target_path_pic3 = $destination_path.'logo/'.$name.'-'. basename( $_FILES['pic3']['name']);
+	
+	$result_pic3=0;
+	if (@move_uploaded_file($_FILES['pic3']['tmp_name'], $target_path_pic3)){
+	
+		$result_pic3=1;
+	}
 	
 	//pic4 upload
+	$target_path_pic4 = $destination_path.'logo/'.$name.'-'. basename( $_FILES['pic4']['name']);
 	
+	$result_pic4=0;
+	if (@move_uploaded_file($_FILES['pic4']['tmp_name'], $target_path_pic4)){
+	
+		$result_pic4=1;
+	}
 	
 	
 }
@@ -106,68 +136,7 @@ if (isset($_POST['SubmitDetails'])){
 ////////////////////////
 //Validation
 	
-//Guide name validation
-	$(document).ready(function () {
-	  var validateName = $('#validateName');
-	  $('#name').keyup(function () {
-	    var t = this; 
-	    if (this.value != this.lastValue) {
-	      if (this.timer) clearTimeout(this.timer);
-	      validateName.removeClass('error').html('<img src="../img/loader.gif" height="16" width="16" /> checking availability...');
-	      
-	      this.timer = setTimeout(function () {
-	        $.ajax({
-	          url: '../inc/getGuideName.php',
-	          data: 'action=check_username&name=' + t.value,
-	          dataType: 'json',
-	          type: 'post',
-	          success: function (j) {
-	            validateName.html(j.msg);
-	            if (j.ok==true){
-		            alert('Name already taken.Please change Guide name.');
-	            	document.getElementById("submitChange").disabled = true;
-		            }
-	            else{
-	            	document.getElementById("submitChange").disabled = false;
-		            }
-	          }
-	        });
-	      }, 200);
-	      
-	      this.lastValue = this.value;
-	    }
-	  });
-	});
-	$('input').keyup(function() {
-	    var $th = $(this);
-	    $th.val( $th.val().replace(/[^a-zA-Z0-9]/g, function(str) { alert('You typed " ' + str + ' ".\n\nPlease use only letters and numbers.'); return ''; } ) );
-	});
 
-	function validateForm()
-	{
-	var x=document.forms["formNewGuide"]["name"].value;
-	if (x==null || x=="")
-	  {
-	  alert("GuideName must be filled out");
-	  //document.getElementById("submitChange").disabled = true;
-	  return false;
-	  }
-	var x1=document.forms["formNewGuide"]["subname"].value;
-	if (x1==null || x1=="")
-	  {
-	  alert("Guide SubName must be filled out");
-	  //document.getElementById("submitChange").disabled = true;
-	  return false;
-	  }
-	var x2=document.forms["formNewGuide"]["wkt"].value;
-	if (x2==null || x2=="")
-	  {
-	  alert("Missing Guide Geometry.Please go to Step 1.");
-	  //document.getElementById("submitChange").disabled = true;
-	  return false;
-	  }
-	 
-	}
 
     </script>
 </head>
@@ -204,7 +173,25 @@ if (isset($_POST['SubmitDetails'])){
 			
 		    <div class="span3">
 		    
+				<table>
+				<thead>
+					<tr>
+					<th></th>
+					</tr>
 				
+				</thead>
+				<tbody>
+					<tr>
+					<td></td>
+					
+					
+					</tr>
+				
+				
+				</tbody>
+				
+				
+				</table>
 			
 			
 			</div>

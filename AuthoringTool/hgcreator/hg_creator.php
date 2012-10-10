@@ -301,7 +301,7 @@ function init_map() {
 			
 		<div class="span3">
 		    
-				<form name="formNewGuide" action="hg_editor.php" method="post" onsubmit="return validateForm()" >
+				<form name="formNewGuide" action="hg_creator2.php" method="post" onsubmit="return validateForm()" >
 					
 					<legend>Track geometry overview.</legend>
 					
