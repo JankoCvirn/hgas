@@ -53,6 +53,17 @@ if (isset($_POST['SubmitChange'])){
 	$difficulty=$_POST['difficulty'];
 	$nature=$_POST['nature'];
 	
+	//logo upload
+	
+	
+	//pic1 upload
+	
+	//pic2 upload
+	
+	//pic3 upload
+	
+	//pic4 upload
+	
 	
 	
 	$oHgUtil=new hgutils($username);

@@ -13,13 +13,15 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Guide Manager <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="../hgcreator/hg_main.php">Guide Overview</a></li>
-	              <li><a href="../hgcreator/hg_creator.php">Guide Editor</a></li>
-				  <!--  <li><a href="../hgcreator/hg_editor.php">Guide Editor</a></li>-->   
+	              <li><a href="../hgcreator/hg_creator.php">Guide Creator</a></li>
+				  <li><a href="">Guide Editor</a></li>
 	              <li><a href="../hgcreator/hg_publisher.php">Guide Publisher</a></li>
                 </ul>
               </li>
-             <li><a href="">Mobile application</a></li>
-             <li><a href="">Help topics</a></li>
+              <li><a href="">News</a></li>
+              <li><a href="">Contact</a></li>
+             
+             <li><a href="">Help</a></li>
             </ul>
             <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

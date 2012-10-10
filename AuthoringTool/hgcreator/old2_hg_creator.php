@@ -3,7 +3,7 @@ ini_set("session.gc_maxlifetime", "3600");
 require_once  ("../inc/utils.php");
 
 $page_title='HikeGuide Authoring Tools';
-$brand_text='HikeGuide Creator - Step 1';
+$brand_text="Hiker's Guide Creator - Step 1";
 $hero_text ='Create a new guide user interface.';
 
 session_start();
@@ -59,10 +59,9 @@ if (!session_is_registered($username)) {
 <script type="text/javascript">
 
 
-var lat=47.496792;
-var lon=7.571726;
-var zoom=6;
-var lgpx;
+var lat=47.496792
+var lon=7.571726
+var zoom=6
 
 var map; 
 
@@ -128,6 +127,11 @@ function init_map() {
 	    return true;
 	}
 
+	function uploadLogo(){
+
+		
+		}
+
 	function stopUpload(success){
 	      var result = '';
 	      if (success==0) {
@@ -137,9 +141,9 @@ function init_map() {
 	      else{
 	         document.getElementById('result').innerHTML =
 	           '<span class="msg">'+success+' - The .gpx file was uploaded successfully!<\/span><br/><br/>';
-			if (lgpx!=null){map.removeLayer(lgpx);}
+
 	        // Add the Layer with the GPX Track
-	       	lgpx = new OpenLayers.Layer.Vector("Imported track ", {
+	       	var lgpx = new OpenLayers.Layer.Vector("Imported track ", {
 	       		strategies: [new OpenLayers.Strategy.Fixed()],
 	       		protocol: new OpenLayers.Protocol.HTTP({
 	       			url: '../upload/'+success,
@@ -230,16 +234,62 @@ function init_map() {
 	//Validation
 	
 	//Guide name validation
-	
-	
+	$(document).ready(function () {
+	  var validateName = $('#validateName');
+	  $('#name').keyup(function () {
+	    var t = this; 
+	    if (this.value != this.lastValue) {
+	      if (this.timer) clearTimeout(this.timer);
+	      validateName.removeClass('error').html('<img src="../img/loader.gif" height="16" width="16" /> checking availability...');
+	      
+	      this.timer = setTimeout(function () {
+	        $.ajax({
+	          url: '../inc/getGuideName.php',
+	          data: 'action=check_username&name=' + t.value,
+	          dataType: 'json',
+	          type: 'post',
+	          success: function (j) {
+	            validateName.html(j.msg);
+	            if (j.ok==true){
+		            alert('Name already taken.Please change Guide name.');
+	            	document.getElementById("submitChange").disabled = true;
+		            }
+	            else{
+	            	document.getElementById("submitChange").disabled = false;
+		            }
+	          }
+	        });
+	      }, 200);
+	      
+	      this.lastValue = this.value;
+	    }
+	  });
+	});
+	$('input').keyup(function() {
+	    var $th = $(this);
+	    $th.val( $th.val().replace(/[^a-zA-Z0-9]/g, function(str) { alert('You typed " ' + str + ' ".\n\nPlease use only letters and numbers.'); return ''; } ) );
+	});
 
 	function validateForm()
 	{
-	
+	var x=document.forms["formNewGuide"]["name"].value;
+	if (x==null || x=="")
+	  {
+	  alert("GuideName must be filled out");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
+	var x1=document.forms["formNewGuide"]["subname"].value;
+	if (x1==null || x1=="")
+	  {
+	  alert("Guide SubName must be filled out");
+	  //document.getElementById("submitChange").disabled = true;
+	  return false;
+	  }
 	var x2=document.forms["formNewGuide"]["wkt"].value;
 	if (x2==null || x2=="")
 	  {
-	  alert("Please upload GPX file.");
+	  alert("Please upload track geometry.");
 	  //document.getElementById("submitChange").disabled = true;
 	  return false;
 	  }
@@ -267,65 +317,182 @@ function init_map() {
 
 	<div class="container-fluid">
 	    <div class="row_fluid">
-	    <div class="row_fluid">
-	    	<div class="progress progress-striped">
-  <div class="bar" style="width: 33%;"></div>
-</div>
-	    </div>
+	     <div class="span8">
 	    	<p id="f1_upload_process">Uploading...<br/></p>
 			<p id="result"></p>
+			<table class="table table-bordered">
+			
 	    	<form id="upload_form" action="../upload/upload.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();" >
-    			<legend></legend>
-    			<label for="myFile" style="color: blue;"> GPX File location: </label>
-    			<input name="myfile" type="file" />
-    			</br>
-         			  <button type="submit" name="submitGPX" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button>
-         			  </br><lable style="color: orange;">*Map centers on the track geometry when upload is succesfull.</lable>
-					</br>
+    		
+    			<tr><td>Load the new track file</td></tr>
+    			<tr>
+    			<td><label for="myFile" style="color: blue;">GPX File location  </label></td>
+    			</tr>
+    			<tr>
+    			<td><input name="myfile" type="file" /></br>
+    			
+         			  <button type="submit" name="submitGPX" value="Upload"  class="btn btn-primary" data-loading-text="Loading...">Upload</button></td>
+				</tr>
+				<tr>
+				<td>
+				<div id="map_canvas" style="width: 650px; height: 800px;"></div>
+				<p>*Map centers on the track geometry when upload is succesfull.</p>
+				</td>
+				</tr>
 			</form>
- 
+ 			</table>
 			<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;"></iframe>
 	    	
-	    	
+	     </div>
 	    </div>
 	
 		<div class="row-fluid">
-		<div class="span8">
-				<p></p>
-				</br>
-			    
+			
+		    <div class="span3">
+		    <p>&nbsp;</p>
+		    <p></p>
+		    <table class="table table-bordered">
+				<form name="formNewGuide" action="hg_editor.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()" class="form-inline" >
+					<tr>
+					<td>Describe the new Hiker's Guide File</td>
+					</tr>
+					<tr>
+						<td>
+						<label for="name" style="color: blue;"> Name: </label> 
+						<input id="name" value="" type="text" name="name" /> 
+						<span id="validateName"><?php if ($error) { echo $error['msg']; } ?></span>
+						</td>
+						<td>
+						<label for="name" style="color: blue;"> Text color: </label> 
+						<select id="tcolor" name="tcolor">
+							<option value="black">Black</option>
+							<option value="white">White</option>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="subname" style="color: blue;"> Sub Name: </label> 
+							<input id="subname" value="" type="text" name="subname" /> 
+						</td>
+						<td>
+							<label for="name" style="color: blue;"> Background color: </label> 
+							<select id="bcolor" name="bcolor">
+								<option value="black">Black</option>
+								<option value="white">White</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="logoFile" style="color: blue;">Logo file location: </label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input name="logoFile" type="file" />
+						</td>
+						
+					</tr>
+			</table>
+			<table class="table table-bordered">
+					
+					<tr>
+						<td>
+							<label for="pic1" style="color: blue;">Picture 1 file location: </label>
+							
+							<input name="pic1" type="file" class="input-mini"  placeholder=".input-mini"/>
+							
+							
+						</td>
+						</tr>
+					<tr>
+					<td>
+							<label for="pic2" style="color: blue;">Picture 2 file location: </label>
+							
+							<input name="pic2" type="file" />
+							
+							
+						</td>
+					</tr>
+			
+						<tr>
+							<td>
+								<label for="pic3" style="color: blue;">Picture 3 file location: </label>
+							
+								<input name="pic3" type="file" />
+							
+								
+							</td>
+						 </tr>
+						 <tr>
+							<td>
+								<label for="pic4" style="color: blue;">Picture 4 file location: </label>
+								
+								<input name="pic4" type="file" />
+								
+								
+							</td>
+						</tr>
+		    </table>
+		    <table class="table table-bordered">
+		    <tr>
+		        <td>
+		        <label for="distance" style="color: blue;"> Distance: </label> 
+							<input id="distance" value="" type="text" name="distance" /> 
+		        </td>
+		        <td>
+		        <label for="region" style="color: blue;"> Region: </label> 
+							<input id="region" value="" type="text" name="region" /> 
+		        </td>
+		    </tr>
+		    <tr>
+		       <td>
+		       
+		        <label for="difficulty" style="color: blue;"> Difficulty: </label> 
+							<input id="difficulty" value="" type="text" name="difficulty" /> 
+		        
+		       </td>
+		       
+		       <td>
+		        <label for="nature" style="color: blue;"> Nature: </label> 
+							<input id="nature" value="" type="text" name="nature" /> 
+		        </td>
+		       
+		    </tr>
+			<tr>
+			    <td>
+					<label for="summary" style="color: blue;"> Summary text: </label> 
+					<textarea id="summary" value="" type="text" cols="200" rows="5" name="summary" ></textarea>
+				 </td>
+			</tr>
 				
-				<div id="map_canvas" style="width: 800px; height: 600px;"></div>
-				<p></p>
-		</div>
-			
-		<div class="span3">
-		    
-				<form name="formNewGuide" action="hg_editor.php" method="post" onsubmit="return validateForm()" >
-					
-					<legend>Track geometry overview.</legend>
-					
-					
-					<label for="wkt" style="color: blue;"> Geometry WKT: </label> 
-					<input id="wkt" value="" type="text" name="wkt" readonly="readonly"/> 
-					
-					
-					</br><lable style="color: orange;">Go to Step 2 (describe the hike)</lable>
-					</br>
-					<button id="submitChange" type="submit" class="btn btn-primary" value="Submit"
-						name="SubmitChange">Go</button>
-					
-				</form>
+				<tr><td><label for="wkt" style="color: blue;"> Geometry WKT: </label> 
+					<input id="wkt" value="" type="text" name="wkt" readonly="readonly"/> </td></tr>
+				<tr><td>
+				<button id="submitChange" type="submit" class="btn btn-success" value="Submit"
+						name="SubmitChange">Go To Step 2</button>
+				</td></tr>
+			</table>
 			
 			
-		</div>
+						
+			</div>
 	    
-			<p></p>
-			<p></p>
-			
-			
 			
 		</div>
+			
+		<div class="row">
+			<div class="span3">
+			
+				
+			
+			</form>
+			</div>
+		
+		</div>	
+			
+		
 
 
 
